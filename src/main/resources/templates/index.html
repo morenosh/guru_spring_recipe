@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleafe.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Index</title>
+</head>
+<body>
+<h2>Recipe Index!</h2>
+
+<table id="vets" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Prep Time</th>
+        <th>Cook Time</th>
+        <th>Serv People</th>
+        <th>Source</th>
+        <th>url</th>
+        <th>Difficulty</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="recipe : ${recipeList}">
+        <td th:text="${recipe.title}"></td>
+        <td th:text="${recipe.prepTimeMinutes}"></td>
+        <td th:text="${recipe.cookTimeMinutes}"></td>
+        <td th:text="${recipe.servingPeople}"></td>
+        <td th:text="${recipe.source}"></td>
+        <td th:text="${recipe.url}"></td>
+        <td th:text="${recipe.difficulty}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
