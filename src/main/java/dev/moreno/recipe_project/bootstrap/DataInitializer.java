@@ -2,24 +2,29 @@ package dev.moreno.recipe_project.bootstrap;
 
 import dev.moreno.recipe_project.domains.*;
 import dev.moreno.recipe_project.repositories.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 
+@Slf4j
 @Component
 public class DataInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.debug("start bootstrap data");
         loadPerfectGuacamole();
+        log.debug("perfect guacamole loaded.");
     }
 
     private final RecipeRepository recipeRepository;
@@ -35,22 +40,24 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
     private void loadPerfectGuacamole() {
         var r = new Recipe();
 
-        var category = categoryRepository.findByDescription("Mexican").get();
+        var category = categoryRepository.findByDescription("Mexican").orElse(null);
         var setOfCategory = new HashSet<Category>();
         setOfCategory.add(category);
         r.setCategories(setOfCategory);
         r.setTitle("Best Guacamole");
 
-        URI uri = null;
         try {
-            uri = getClass().getClassLoader().getResource("images/perfect_quacamole.webp").toURI();
-            var bytes = Files.readAllBytes(Path.of(uri));
-            var bBytes = new Byte[bytes.length];
-            for (int i = 0; i < bytes.length; i++) {
-                bBytes[i] = bytes[i];
+            var url = getClass().getClassLoader().getResource("images/perfect_quacamole.webp");
+            if (url != null){
+                var uri = url.toURI();
+                var bytes = Files.readAllBytes(Path.of(uri));
+                var bBytes = new Byte[bytes.length];
+                for (int i = 0; i < bytes.length; i++) {
+                    bBytes[i] = bytes[i];
+                }
+                r.setImage(bBytes);
             }
-            r.setImage(bBytes);
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException | IOException | NullPointerException e) {
             e.printStackTrace();
         }
         r.setDifficulty(Difficulty.EASY);
@@ -66,14 +73,14 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         note.setRecipe(r);
 
         var ripeAvocados = new Ingredient();
-        var nothingUnitOfMeasure = unitOfMeasureRepository.findByUom("").get();
+        var nothingUnitOfMeasure = unitOfMeasureRepository.findByUom("").orElse(null);
         ripeAvocados.setUnitOfMeasure(nothingUnitOfMeasure);
         ripeAvocados.setAmount(2f);
         ripeAvocados.setDescription("ripe avocados");
         ripeAvocados.setRecipe(r);
 
         var salt = new Ingredient();
-        var tableSpoon = unitOfMeasureRepository.findByUom("Tablespoon").get();
+        var tableSpoon = unitOfMeasureRepository.findByUom("Tablespoon").orElse(null);
         salt.setRecipe(r);
         salt.setAmount(0.25f);
         salt.setUnitOfMeasure(tableSpoon);

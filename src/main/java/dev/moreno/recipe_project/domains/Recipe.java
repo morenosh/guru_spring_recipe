@@ -1,12 +1,17 @@
 package dev.moreno.recipe_project.domains;
 
-import ch.qos.logback.core.util.DefaultInvocationGate;
-import org.hibernate.annotations.Columns;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Recipe extends BaseEntity<Long> {
     private String title;
@@ -20,111 +25,26 @@ public class Recipe extends BaseEntity<Long> {
     @Lob
     private Byte[] image;
 
+    @SuppressWarnings("JpaDataSourceORMInspection")
     @ManyToMany
     @JoinTable(
             name = "recipe_category",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+    @ToString.Exclude
     private Set<Category> categories;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    @ToString.Exclude
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private Note note;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Long getPrepTimeMinutes() {
-        return prepTimeMinutes;
-    }
-
-    public void setPrepTimeMinutes(Long prepTimeMinutes) {
-        this.prepTimeMinutes = prepTimeMinutes;
-    }
-
-    public Long getCookTimeMinutes() {
-        return cookTimeMinutes;
-    }
-
-    public void setCookTimeMinutes(Long cookTimeMinutes) {
-        this.cookTimeMinutes = cookTimeMinutes;
-    }
-
-    public Short getServingPeople() {
-        return servingPeople;
-    }
-
-    public void setServingPeople(Short servingPeople) {
-        this.servingPeople = servingPeople;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getDirections() {
-        return directions;
-    }
-
-    public void setDirections(String directions) {
-        this.directions = directions;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public Byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(Byte[] image) {
-        this.image = image;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
-    }
-
-    public Set<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
     public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
         ingredients.forEach(i->i.setRecipe(this));
-    }
-
-    public Note getNote() {
-        return note;
     }
 
     public void setNote(Note note) {
@@ -140,5 +60,18 @@ public class Recipe extends BaseEntity<Long> {
 
         ingredient.setRecipe(this);
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Recipe recipe = (Recipe) o;
+        return id != null && Objects.equals(id, recipe.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

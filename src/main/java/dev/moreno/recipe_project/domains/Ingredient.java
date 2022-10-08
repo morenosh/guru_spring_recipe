@@ -1,10 +1,18 @@
 package dev.moreno.recipe_project.domains;
 
+import lombok.*;
+import org.hibernate.Hibernate;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Ingredient extends BaseEntity<Integer> {
     private String description;
@@ -16,37 +24,21 @@ public class Ingredient extends BaseEntity<Integer> {
     @OneToOne(fetch = FetchType.EAGER)
     private UnitOfMeasure unitOfMeasure;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
     public void setRecipe(Recipe recipe) {
         if (recipe == this.recipe) return;
-        this.recipe = recipe;
-        recipe.addIngredient(this);
+        this.recipe = recipe.addIngredient(this);
     }
 
-    public UnitOfMeasure getUnitOfMeasure() {
-        return unitOfMeasure;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Ingredient that = (Ingredient) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
-    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
