@@ -11,7 +11,9 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Recipe extends BaseEntity<Long> {
     private String title;
