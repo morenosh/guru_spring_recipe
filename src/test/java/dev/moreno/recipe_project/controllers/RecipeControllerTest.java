@@ -32,7 +32,7 @@ class RecipeControllerTest {
 
         Mockito.when(recipeService.findById(Mockito.anyLong())).thenReturn(Recipe.builder().build());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/show/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("recipe/show"));
     }
