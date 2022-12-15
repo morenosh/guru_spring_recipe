@@ -12,6 +12,9 @@ public abstract class BaseEntity<T extends Number> {
     public T getId() {
         return id;
     }
+    public void setId(T id) {
+        this.id = id;
+    }
 
     @Override
     public boolean equals(Object o) {

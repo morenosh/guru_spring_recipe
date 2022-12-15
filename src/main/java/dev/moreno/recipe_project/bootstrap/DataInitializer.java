@@ -3,14 +3,11 @@ package dev.moreno.recipe_project.bootstrap;
 import dev.moreno.recipe_project.domains.*;
 import dev.moreno.recipe_project.repositories.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -68,7 +65,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         r.setSource("source?");
         r.setUrl("https://www.simplyrecipes.com/recipes/perfect_guacamole/#toc-ingredients-for-easy-guacamole");
 
-        var note = new Note();
+        var note = new Notes();
         note.setNotes("e careful handling chilis! If using, it's best to wear food-safe gloves. If no gloves are available, wash your hands thoroughly after handling, and do not touch your eyes or the area near your eyes for several hours afterwards.");
         note.setRecipe(r);
 

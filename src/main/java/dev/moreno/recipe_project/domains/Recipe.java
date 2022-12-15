@@ -35,21 +35,21 @@ public class Recipe extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     @ToString.Exclude
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     @ToString.Exclude
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Note note;
+    private Notes note;
 
     public void setIngredients(Set<Ingredient> ingredients) {
         this.ingredients = ingredients;
         ingredients.forEach(i->i.setRecipe(this));
     }
 
-    public void setNote(Note note) {
+    public void setNote(Notes note) {
         if (note == this.note) return;
 
         this.note = note;

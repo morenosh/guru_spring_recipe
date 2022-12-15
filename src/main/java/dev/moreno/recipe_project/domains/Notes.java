@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Data
-public class Note extends BaseEntity<Long>{
+public class Notes extends BaseEntity<Long>{
     private String notes;
 
     @OneToOne
