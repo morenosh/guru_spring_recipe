@@ -22,14 +22,14 @@
 <body>
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="pannel-group">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
+        <div class="col-md-6 offset-md-3">
+            <div class="row row-cols-1">
+                <div class="card">
+                    <div class="card-header bg-primary">
                         <!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
-                        <h1 class="panel-title" th:text="${recipe.title}">Recipe Description Here!</h1>
+                        <h1 class="card-title" th:text="${recipe.title}">Recipe Description Here!</h1>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
                                 <h5>Categories:</h5>
@@ -84,11 +84,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" >Ingredients</h1>
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h1 class="card-title" >Ingredients</h1>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <tr th:each="category : ${recipe.categories}">
@@ -101,11 +101,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" >Directions</h1>
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title" >Directions</h1>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
@@ -114,11 +114,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" >Notes</h1>
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title" >Notes</h1>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
