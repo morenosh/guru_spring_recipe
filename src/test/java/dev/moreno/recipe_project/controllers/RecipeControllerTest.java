@@ -24,7 +24,7 @@ class RecipeControllerTest {
     RecipeController recipeController;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
     }
 
     @Test
@@ -49,10 +49,12 @@ class RecipeControllerTest {
 
     @Test
     void testSaveOrUpdate() throws Exception {
-        //when
+        //given
         var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         var sampleRecipeCommand = new RecipeCommand();
         sampleRecipeCommand.setId(5L);
+
+        //when
         Mockito.when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(sampleRecipeCommand);
 
         //then
@@ -63,10 +65,10 @@ class RecipeControllerTest {
 
     @Test
     void testGetUpdateView() throws Exception {
-        //when
+        //given
         var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        //given
+        //when
         Mockito.when(recipeService.findRecipeCommandById(Mockito.anyLong())).thenReturn(new RecipeCommand());
 
         //then
@@ -74,6 +76,20 @@ class RecipeControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("recipe/recipeform"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"));
+    }
+
+    @Test
+    void testDeleteOneRecipe() throws Exception{
+        //given
+        var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+
+        //when
+        // no given! because service return void
+
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/5/delete"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
     }
 
 }

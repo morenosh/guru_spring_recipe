@@ -2,13 +2,12 @@ package dev.moreno.recipe_project.controllers;
 
 import dev.moreno.recipe_project.commands.RecipeCommand;
 import dev.moreno.recipe_project.services.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 public class RecipeController {
 
@@ -18,12 +17,14 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    @GetMapping
     @RequestMapping({"/recipe/{id}/show"})
     String showById(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findById(Long.parseLong(id)));
         return "recipe/show";
     }
 
+    @GetMapping
     @RequestMapping("/recipe/new")
     String newRecipe(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
@@ -39,10 +40,23 @@ public class RecipeController {
         return "redirect:/recipe/" + savedRecipeCommand.getId() + "/show/";
     }
 
+    @GetMapping
     @RequestMapping("/recipe/{id}/update")
     String updateRecipe(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findRecipeCommandById(Long.parseLong(id)));
 
         return "recipe/recipeform";
+    }
+
+    @GetMapping
+    @RequestMapping("/recipe/{id}/delete")
+    String deleteById(@PathVariable String id) {
+
+        log.debug("Deleting id: " + id);
+
+        var longId = Long.parseLong(id);
+        recipeService.deleteById(longId);
+
+        return "redirect:/";
     }
 }

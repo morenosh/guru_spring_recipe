@@ -78,15 +78,28 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void findRecipeCommandById(){
-        //when
+    void findRecipeCommandById() {
+        //given
         Mockito.when(toRecipeCommand.convert(Mockito.any())).thenReturn(recipeCommandSample1);
 
-        //given
+        //when
         var r = recipeService.findRecipeCommandById(1L);
 
         //then
         assertNotNull(r);
         assertEquals(recipeCommandSample1.getId(), r.getId());
+    }
+
+    @Test
+    void deleteRecipeById() {
+        //given
+        var idToBeDeleted = 5L;
+
+        //when
+        recipeService.deleteById(idToBeDeleted);
+
+        //then
+        Mockito.verify(recipeRepository, Mockito.times(1)).deleteById(idToBeDeleted);
+
     }
 }

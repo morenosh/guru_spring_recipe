@@ -6,6 +6,7 @@ import dev.moreno.recipe_project.converters.RecipeToRecipeCommand;
 import dev.moreno.recipe_project.domains.Recipe;
 import dev.moreno.recipe_project.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +43,8 @@ public class RecipeServiceImpl implements RecipeService {
         return optional.orElse(null);
     }
 
-    @Override
     @Transactional
+    @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
         var detachedRecipe = toRecipe.convert(recipeCommand);
         assert detachedRecipe != null;
@@ -52,9 +53,15 @@ public class RecipeServiceImpl implements RecipeService {
         return toRecipeCommand.convert(savedRecipe);
     }
 
+    @Transactional
     @Override
     public RecipeCommand findRecipeCommandById(Long id) {
         return toRecipeCommand.convert(findById(id));
+    }
+
+    @Override
+    public void deleteById(long id) {
+        recipeRepo.deleteById(id);
     }
 
 }
