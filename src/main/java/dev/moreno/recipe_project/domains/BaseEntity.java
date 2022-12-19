@@ -1,20 +1,21 @@
 package dev.moreno.recipe_project.domains;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @MappedSuperclass
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity<T extends Number> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     T id;
-
-    public T getId() {
-        return id;
-    }
-    public void setId(T id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {

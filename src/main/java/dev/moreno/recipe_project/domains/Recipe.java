@@ -1,6 +1,7 @@
 package dev.moreno.recipe_project.domains;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

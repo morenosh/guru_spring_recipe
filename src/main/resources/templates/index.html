@@ -35,8 +35,9 @@
                             <thead class="thead-inverse">
                             <tr>
                                 <th>ID</th>
-                                <th>Title</th>
+                                <th>Description</th>
                                 <th>View</th>
+                                <th>Update</th>
                             </tr>
                             </thead>
                             <tr th:remove="all">
@@ -50,10 +51,10 @@
                                 <td><a href="#">View</a></td>
                             </tr>
                             <tr th:each="recipe : ${recipeList}">
-                                <!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
                                 <td th:text="${recipe.id}">334</td>
                                 <td th:text="${recipe.title}">Tasty Goodnees 3</td>
-                                <td><a href="#" th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/show'}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/update'}">Update</a></td>
                             </tr>
                         </table>
                     </div>

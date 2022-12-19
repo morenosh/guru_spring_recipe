@@ -1,5 +1,7 @@
 package dev.moreno.recipe_project.services;
 
+import dev.moreno.recipe_project.commands.RecipeCommand;
+import dev.moreno.recipe_project.converters.RecipeToRecipeCommand;
 import dev.moreno.recipe_project.domains.Recipe;
 import dev.moreno.recipe_project.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,10 @@ class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeToRecipeCommand toRecipeCommand;
+
+
     @InjectMocks
     RecipeServiceImpl recipeService;
 
@@ -30,12 +36,21 @@ class RecipeServiceImplTest {
     Recipe recipeSample1 = Recipe.builder().build();
     Recipe recipeSample2 = Recipe.builder().build();
 
+    RecipeCommand recipeCommandSample1;
+    RecipeCommand recipeCommandSample2;
+
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(recipeSample1, "id", 1L);
         ReflectionTestUtils.setField(recipeSample2, "id", 2L);
         RecipeSamples.add(recipeSample1);
         RecipeSamples.add(recipeSample2);
+
+        recipeCommandSample1 = new RecipeCommand();
+        recipeCommandSample1.setId(recipeSample1.getId());
+
+        recipeCommandSample2 = new RecipeCommand();
+        recipeCommandSample2.setId(recipeSample2.getId());
     }
 
     @Test
@@ -60,5 +75,18 @@ class RecipeServiceImplTest {
 
         var r = recipeService.findById(1L);
         assertNull(r);
+    }
+
+    @Test
+    void findRecipeCommandById(){
+        //when
+        Mockito.when(toRecipeCommand.convert(Mockito.any())).thenReturn(recipeCommandSample1);
+
+        //given
+        var r = recipeService.findRecipeCommandById(1L);
+
+        //then
+        assertNotNull(r);
+        assertEquals(recipeCommandSample1.getId(), r.getId());
     }
 }
