@@ -1,6 +1,7 @@
 package dev.moreno.recipe_project.domains;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@SuperBuilder
 @RequiredArgsConstructor
 @Entity
 public class Ingredient extends BaseEntity<Integer> {
