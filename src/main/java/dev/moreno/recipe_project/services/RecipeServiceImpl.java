@@ -37,6 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeSet;
     }
 
+    @Transactional
     @Override
     public Recipe findById(Long id) {
         var optional = recipeRepo.findById(id);
@@ -49,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
         var detachedRecipe = toRecipe.convert(recipeCommand);
         assert detachedRecipe != null;
         var savedRecipe = recipeRepo.save(detachedRecipe);
-        log.debug("Saved Recipe: " + detachedRecipe.getId());
+        log.debug("Saved Recipe: " + savedRecipe.getId());
         return toRecipeCommand.convert(savedRecipe);
     }
 
