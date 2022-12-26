@@ -18,7 +18,7 @@ import java.util.Objects;
 @Entity
 public class Ingredient extends BaseEntity<Integer> {
     private String description;
-    private float amount;
+    private Float amount;
 
     @ManyToOne
     private Recipe recipe;

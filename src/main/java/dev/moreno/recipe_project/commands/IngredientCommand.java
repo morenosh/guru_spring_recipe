@@ -12,7 +12,7 @@ public class IngredientCommand {
     private Integer id;
     private Long recipeId;
     private String description;
-    private float amount;
+    private Float amount;
     private UnitOfMeasureCommand unitOfMeasure;
 
 }
