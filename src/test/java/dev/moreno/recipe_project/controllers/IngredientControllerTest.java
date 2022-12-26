@@ -6,6 +6,7 @@ import dev.moreno.recipe_project.repositories.UnitOfMeasureRepository;
 import dev.moreno.recipe_project.services.IngredientService;
 import dev.moreno.recipe_project.services.RecipeService;
 import dev.moreno.recipe_project.services.UnitOfMeasureService;
+import jdk.jshell.spi.ExecutionControlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,5 +106,20 @@ class IngredientControllerTest {
         mockMvn.perform(MockMvcRequestBuilders.post("/recipe/1/ingredient"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/1/ingredient/3/show"));
+    }
+
+    @Test
+    void testNewIngredient() throws Exception {
+        //given
+        var mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+
+        //when
+
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
+                .andExpect(MockMvcResultMatchers.view().name("recipe/ingredient/ingredientform"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("ingredient"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("uomList"));
     }
 }

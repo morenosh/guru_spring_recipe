@@ -1,6 +1,7 @@
 package dev.moreno.recipe_project.controllers;
 
 import dev.moreno.recipe_project.commands.IngredientCommand;
+import dev.moreno.recipe_project.commands.UnitOfMeasureCommand;
 import dev.moreno.recipe_project.services.IngredientService;
 import dev.moreno.recipe_project.services.RecipeService;
 import dev.moreno.recipe_project.services.UnitOfMeasureService;
@@ -75,4 +76,17 @@ public class IngredientController {
 
     }
 
+    @GetMapping
+    @RequestMapping("/recipe/{recipeId}/ingredient/new")
+    String newIngredient(@PathVariable String recipeId, Model model) {
+        var recipeIdLong = Long.parseLong(recipeId);
+//        var recipe = recipeService.findRecipeCommandById(recipeIdLong);
+        var ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeIdLong);
+        ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
+
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("uomList", unitOfMeasureService.listAllUnitOfMeasures());
+        return "recipe/ingredient/ingredientform";
+    }
 }

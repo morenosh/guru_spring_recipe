@@ -3,6 +3,7 @@ package dev.moreno.recipe_project.services;
 import dev.moreno.recipe_project.commands.IngredientCommand;
 import dev.moreno.recipe_project.converters.IngredientCommandToIngredient;
 import dev.moreno.recipe_project.converters.IngredientToIngredientCommand;
+import dev.moreno.recipe_project.domains.Ingredient;
 import dev.moreno.recipe_project.repositories.IngredientRepository;
 import dev.moreno.recipe_project.repositories.RecipeRepository;
 import dev.moreno.recipe_project.repositories.UnitOfMeasureRepository;
@@ -82,10 +83,20 @@ public class IngredientServiceImpl implements IngredientService {
         }
         var savedRecipe = recipeRepository.save(oldRecipe.get());
 
-        var savedIngredient = savedRecipe.getIngredients()
-                .stream().filter(
-                        a -> a.getId().equals(ingredientCommand.getId())
-                ).findFirst().orElseThrow(()->new RuntimeException("ingredient not found"));
+        Ingredient savedIngredient;
+        if (ingredientCommand.getId() != null){
+            savedIngredient = savedRecipe.getIngredients()
+                    .stream().filter(
+                            a -> a.getId().equals(ingredientCommand.getId())
+                    ).findFirst().orElseThrow(() -> new RuntimeException("ingredient not found"));
+        } else{
+            savedIngredient = savedRecipe.getIngredients()
+                    .stream().filter(
+                            a -> a.getDescription().equals(ingredientCommand.getDescription()) &&
+                                    a.getAmount().equals(ingredientCommand.getAmount()) &&
+                                    a.getUnitOfMeasure().getId().equals(ingredientCommand.getUnitOfMeasure().getId())
+                    ).findFirst().orElseThrow(() -> new RuntimeException("ingredient not found"));
+        }
         return toIngredientCommand.convert(savedIngredient);
     }
 }
