@@ -44,7 +44,7 @@ public class DataInitializer implements ApplicationListener<ContextRefreshedEven
         r.setTitle("Best Guacamole");
 
         try {
-            var url = getClass().getClassLoader().getResource("images/perfect_quacamole.webp");
+            var url = getClass().getClassLoader().getResource("/static/images/perfect_quacamole.webp");
             if (url != null){
                 var uri = url.toURI();
                 var bytes = Files.readAllBytes(Path.of(uri));
