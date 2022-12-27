@@ -1,5 +1,6 @@
 package dev.moreno.recipe_project.controllers;
 
+import com.sun.istack.NotNull;
 import dev.moreno.recipe_project.commands.IngredientCommand;
 import dev.moreno.recipe_project.commands.UnitOfMeasureCommand;
 import dev.moreno.recipe_project.services.IngredientService;
@@ -80,7 +81,9 @@ public class IngredientController {
     @RequestMapping("/recipe/{recipeId}/ingredient/new")
     String newIngredient(@PathVariable String recipeId, Model model) {
         var recipeIdLong = Long.parseLong(recipeId);
-//        var recipe = recipeService.findRecipeCommandById(recipeIdLong);
+        var recipe = recipeService.findRecipeCommandById(recipeIdLong);
+        assert recipe != null; //todo check if recipe is not available and do appropriate action
+
         var ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeIdLong);
         ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
