@@ -2,6 +2,7 @@ package dev.moreno.recipe_project.controllers;
 
 import dev.moreno.recipe_project.commands.IngredientCommand;
 import dev.moreno.recipe_project.commands.RecipeCommand;
+import dev.moreno.recipe_project.domains.Ingredient;
 import dev.moreno.recipe_project.repositories.UnitOfMeasureRepository;
 import dev.moreno.recipe_project.services.IngredientService;
 import dev.moreno.recipe_project.services.RecipeService;
@@ -10,9 +11,7 @@ import jdk.jshell.spi.ExecutionControlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
@@ -39,6 +38,15 @@ class IngredientControllerTest {
 
     @InjectMocks
     IngredientController ingredientController;
+
+    @Captor
+    ArgumentCaptor<IngredientCommand> ingredientCommandArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Integer> integerCaptor;
+
+    @Captor
+    ArgumentCaptor<Long> longCaptor;
 
     @Test
     void listIngredients() throws Exception {
@@ -125,9 +133,33 @@ class IngredientControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("ingredient"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("uomList")).andReturn();
 
+        assertNotNull(result.getModelAndView());
         var ingredient = result.getModelAndView().getModel().get("ingredient");
         assertNotNull(ingredient);
         var uomList = result.getModelAndView().getModel().get("uomList");
         assertNotNull(uomList);
     }
+
+    @Test
+    void testIngredientDelete() throws Exception {
+        //given
+        var mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
+
+        //when
+        var ingredientId = 2;
+        var recipeId = 1L;
+        var ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(2);
+        ingredientCommand.setRecipeId(1L);
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + recipeId + "/ingredient/" + ingredientId + "/delete"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeId + "/ingredients"));
+
+        //then
+        Mockito.verify(ingredientService, Mockito.times(1)).deleteByIdAndRecipeId(integerCaptor.capture(), longCaptor.capture());
+        assertEquals(ingredientId, integerCaptor.getValue());
+        assertEquals(recipeId, longCaptor.getValue());
+    }
+
+
 }

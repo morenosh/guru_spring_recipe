@@ -92,4 +92,14 @@ public class IngredientController {
         model.addAttribute("uomList", unitOfMeasureService.listAllUnitOfMeasures());
         return "recipe/ingredient/ingredientform";
     }
+
+    @GetMapping
+    @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
+        var recipeIdLong = Long.parseLong(recipeId);
+        var ingredientIdInt = Integer.parseInt(ingredientId);
+        ingredientService.deleteByIdAndRecipeId(ingredientIdInt, recipeIdLong);
+        return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
 }

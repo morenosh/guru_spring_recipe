@@ -4,6 +4,7 @@ import dev.moreno.recipe_project.commands.IngredientCommand;
 import dev.moreno.recipe_project.commands.UnitOfMeasureCommand;
 import dev.moreno.recipe_project.converters.IngredientCommandToIngredient;
 import dev.moreno.recipe_project.converters.IngredientToIngredientCommand;
+import dev.moreno.recipe_project.domains.BaseEntity;
 import dev.moreno.recipe_project.domains.Ingredient;
 import dev.moreno.recipe_project.domains.Recipe;
 import dev.moreno.recipe_project.domains.UnitOfMeasure;
@@ -13,15 +14,13 @@ import dev.moreno.recipe_project.repositories.UnitOfMeasureRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,6 +44,12 @@ class IngredientServiceImplTest {
 
     @InjectMocks
     IngredientServiceImpl ingredientService;
+
+    @Captor
+    ArgumentCaptor<Recipe> recipeArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Integer> integerArgumentCaptor;
 
     @Test
     void findCommandByIdAndRecipeId() {
@@ -152,5 +157,35 @@ class IngredientServiceImplTest {
         assertNotNull(savedCommand);
         assertEquals(ingredientCommand.getId(), savedCommand.getId());
         assertEquals(recipeIncludeIngredient.getId(), savedCommand.getRecipeId());
+    }
+
+    @Test
+    void deleteByIdAndRecipeIdWhenRecipeAndIngredientAvailable() {
+        //given
+        var recipeId = 2L;
+        var ingredientId = 1;
+        var recipe = new Recipe();
+        var ingredient = new Ingredient();
+        recipe.setId(recipeId);
+        ingredient.setId(ingredientId);
+        recipe.addIngredient(ingredient);
+        var oldIngredientSize = recipe.getIngredients().size();
+        Mockito.when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
+
+        //when
+        ingredientService.deleteByIdAndRecipeId(ingredientId, recipeId);
+
+        //then
+        Mockito.verify(recipeRepository, Mockito.times(1)).findById(recipeId);
+
+        Mockito.verify(recipeRepository, Mockito.times(1)).save(recipeArgumentCaptor.capture());
+        var newRecipe = recipeArgumentCaptor.getValue();
+
+        Mockito.verify(ingredientRepository, Mockito.times(1)).deleteById(integerArgumentCaptor.capture());
+        assertEquals(ingredientId, integerArgumentCaptor.getValue());
+
+        assertNotNull(newRecipe);
+        assertEquals(oldIngredientSize - 1, newRecipe.getIngredients().size());
+        assertFalse(newRecipe.getIngredients().stream().map(BaseEntity::getId).anyMatch(c->c.equals(ingredientId)));
     }
 }

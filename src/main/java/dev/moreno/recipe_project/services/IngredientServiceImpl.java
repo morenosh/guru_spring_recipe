@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -40,19 +42,22 @@ public class IngredientServiceImpl implements IngredientService {
             //todo impl error handling
             log.error("recipe id not found: " + recipeId);
         }
+        else{
+            var ingredientSet = recipe.get().getIngredients();
 
-        var ingredientSet = recipe.get().getIngredients();
+            var ingredientCommand =
+                    ingredientSet.stream().filter(a -> a.getId().equals(id))
+                            .map(toIngredientCommand::convert).findFirst();
 
-        var ingredientCommand =
-                ingredientSet.stream().filter(a -> a.getId().equals(id))
-                        .map(toIngredientCommand::convert).findFirst();
-
-        if (ingredientCommand.isEmpty()) {
-            //todo impl error handling
-            log.error("Ingredient id not found: " + id);
+            if (ingredientCommand.isEmpty()) {
+                //todo impl error handling
+                log.error("Ingredient id not found: " + id);
+            }
+            else{
+                return ingredientCommand.get();
+            }
         }
-
-        return ingredientCommand.get();
+        return null;
     }
 
 
@@ -84,12 +89,12 @@ public class IngredientServiceImpl implements IngredientService {
         var savedRecipe = recipeRepository.save(oldRecipe.get());
 
         Ingredient savedIngredient;
-        if (ingredientCommand.getId() != null){
+        if (ingredientCommand.getId() != null) {
             savedIngredient = savedRecipe.getIngredients()
                     .stream().filter(
                             a -> a.getId().equals(ingredientCommand.getId())
                     ).findFirst().orElseThrow(() -> new RuntimeException("ingredient not found"));
-        } else{
+        } else {
             savedIngredient = savedRecipe.getIngredients()
                     .stream().filter(
                             a -> a.getDescription().equals(ingredientCommand.getDescription()) &&
@@ -98,5 +103,27 @@ public class IngredientServiceImpl implements IngredientService {
                     ).findFirst().orElseThrow(() -> new RuntimeException("ingredient not found"));
         }
         return toIngredientCommand.convert(savedIngredient);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIdAndRecipeId(int ingredientId, long recipeId) {
+
+        var recipe = recipeRepository.findById(recipeId);
+        if (recipe.isPresent()) {
+            log.debug("found recipe");
+            var ingredient = recipe.get().getIngredients()
+                    .stream().filter(a -> a.getId().equals(ingredientId)).findFirst();
+            if (ingredient.isPresent()){
+                log.debug("found Ingredient");
+                recipe.get().getIngredients().remove(ingredient.get());
+                recipeRepository.save(recipe.get());
+                ingredientRepository.deleteById(ingredientId);
+            } else {
+                log.debug("ingredient not found");
+            }
+        } else {
+            log.debug("Recipe Id Not found. Id:" + recipeId);
+        }
     }
 }
