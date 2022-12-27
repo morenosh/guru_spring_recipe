@@ -26,7 +26,8 @@
 
 </head>
 <body>
-<!--/*@thymesVar id="recipe" type="guru.springframework.commands.RecipeCommand"*/-->
+<!--/*@thymesVar id="recipe" type="dev.moreno.recipe_project.commands.RecipeCommand"*/-->
+<!--/*@thymesVar id="recipe" type="dev.moreno.recipe_project.domains.Recipe"*/-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -75,7 +76,14 @@
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label>Difficulty:</label>
-                                        <select class="form-control">
+                                        <select class="form-control" th:field="*{difficulty}">
+                                            <option th:each="difficultyValue : ${T(dev.moreno.recipe_project.domains.Difficulty).values()}"
+                                                    th:value="${difficultyValue.name()}"
+                                                    th:text="${difficultyValue.name()}"
+                                            >val
+                                            </option>
+                                        </select>
+                                        <select class="form-control" th:remove="all">
                                             <option>Easy</option>
                                             <option>Medium</option>
                                             <option>Hard</option>
@@ -132,7 +140,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 form-group">
-                                        <textarea class="form-control" rows="3" th:field="*{directions}"></textarea></div>
+                                        <textarea class="form-control" rows="3" th:field="*{directions}"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +152,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 form-group">
-                                        <textarea class="form-control" rows="3" th:field="*{notes.recipeNotes}"></textarea>
+                                        <textarea class="form-control" rows="3"
+                                                  th:field="*{notes.recipeNotes}"></textarea>
                                     </div>
                                 </div>
                             </div>
