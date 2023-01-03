@@ -26,8 +26,7 @@ public class IngredientController {
         this.unitOfMeasureService = unitOfMeasureService;
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredients")
+    @GetMapping("/recipe/{recipeId}/ingredients")
     String listIngredients(@PathVariable String recipeId, Model model) {
 
         var id = Long.parseLong(recipeId);
@@ -38,8 +37,7 @@ public class IngredientController {
         return "recipe/ingredient/list";
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredient/{id}/show")
+    @GetMapping("/recipe/{recipeId}/ingredient/{id}/show")
     String showRecipeIngredient(@PathVariable String recipeId,
                                 @PathVariable String id,
                                 Model model) {
@@ -53,8 +51,7 @@ public class IngredientController {
     }
 
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredient/{id}/update")
+    @GetMapping("/recipe/{recipeId}/ingredient/{id}/update")
     String updateRecipeIngredient(@PathVariable String recipeId,
                                   @PathVariable String id,
                                   Model model) {
@@ -67,8 +64,7 @@ public class IngredientController {
         return "recipe/ingredient/ingredientform";
     }
 
-    @PostMapping
-    @RequestMapping("/recipe/{recipeId}/ingredient")
+    @PostMapping("/recipe/{recipeId}/ingredient")
     String savedRecipeIngredient(@ModelAttribute IngredientCommand ingredientCommand) {
         var savedIngredientCommand = ingredientService.saveIngredientCommand(ingredientCommand);
         log.debug("saved receipe id:" + savedIngredientCommand.getRecipeId());
@@ -77,8 +73,7 @@ public class IngredientController {
 
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredient/new")
+    @GetMapping("/recipe/{recipeId}/ingredient/new")
     String newIngredient(@PathVariable String recipeId, Model model) {
         var recipeIdLong = Long.parseLong(recipeId);
         var recipe = recipeService.findRecipeCommandById(recipeIdLong);
@@ -93,8 +88,7 @@ public class IngredientController {
         return "recipe/ingredient/ingredientform";
     }
 
-    @GetMapping
-    @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
     String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
         var recipeIdLong = Long.parseLong(recipeId);
         var ingredientIdInt = Integer.parseInt(ingredientId);
