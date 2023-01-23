@@ -38,9 +38,9 @@ public class ImageControllerTest {
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/image"))
-                .andExpect(MockMvcResultMatchers.view().name("recipe/imageuploadform"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+            .andExpect(MockMvcResultMatchers.view().name("recipe/imageuploadform"))
+            .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"))
+            .andExpect(MockMvcResultMatchers.status().isOk());
         Mockito.verify(recipeService, Mockito.times(1)).findRecipeCommandById(1L);
     }
 
@@ -49,16 +49,33 @@ public class ImageControllerTest {
         //given
         var mockMvc = MockMvcBuilders.standaloneSetup(imageController).build();
         MockMultipartFile multipartFile =
-                new MockMultipartFile("imagefile", "testing.txt",
-                        "text/plain", "moreno is coding".getBytes());
+            new MockMultipartFile("imagefile", "testing.txt",
+                "text/plain", "moreno is coding" .getBytes());
 
         //when
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.multipart("/recipe/1/image").file(multipartFile))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.header().string("Location", "/recipe/1/show"));
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+            .andExpect(MockMvcResultMatchers.header().string("Location", "/recipe/1/show"));
 
         Mockito.verify(imageService, Mockito.times(1)).saveImageFile(Mockito.anyLong(), Mockito.any());
+    }
+
+    @Test
+    void handleImagePostNumberFormatException() throws Exception {
+        //given
+        var mockMvc =
+            MockMvcBuilders.standaloneSetup(imageController).setControllerAdvice(ControllerExceptionHandler.class).build();
+        MockMultipartFile multipartFile =
+            new MockMultipartFile("imagefile", "testing.txt",
+                "text/plain", "moreno is coding" .getBytes());
+        //when
+
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/recipe/a/image").file(multipartFile))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.view().name("/400error.html"));
+
     }
 }

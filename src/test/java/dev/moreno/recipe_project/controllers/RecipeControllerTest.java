@@ -55,7 +55,8 @@ class RecipeControllerTest {
 
     @Test
     void testNumberFormatException() throws Exception {
-        var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        var mockMvc =
+            MockMvcBuilders.standaloneSetup(recipeController).setControllerAdvice(ControllerExceptionHandler.class).build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/a/show/"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
