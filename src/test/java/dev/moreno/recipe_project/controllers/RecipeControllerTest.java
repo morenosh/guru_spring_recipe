@@ -49,7 +49,8 @@ class RecipeControllerTest {
         Mockito.when(recipeService.findById(Mockito.anyLong())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show/"))
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andExpect(MockMvcResultMatchers.view().name("/404error.html"));
     }
 
     @Test
@@ -57,7 +58,8 @@ class RecipeControllerTest {
         var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/a/show/"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.view().name("/400error.html"));
     }
 
     @Test
