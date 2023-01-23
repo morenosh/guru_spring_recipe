@@ -3,6 +3,7 @@ package dev.moreno.recipe_project.services;
 import dev.moreno.recipe_project.commands.RecipeCommand;
 import dev.moreno.recipe_project.converters.RecipeToRecipeCommand;
 import dev.moreno.recipe_project.domains.Recipe;
+import dev.moreno.recipe_project.exceptions.NotFoundException;
 import dev.moreno.recipe_project.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,15 +73,15 @@ class RecipeServiceImplTest {
     @Test
     void findByIdNotFound() {
         Mockito.when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-        var r = recipeService.findById(1L);
-        assertNull(r);
+        var exception = assertThrows(NotFoundException.class, () -> recipeService.findById(1L));
+        assertEquals("Recipe Not Found", exception.getMessage());
     }
 
     @Test
     void findRecipeCommandById() {
         //given
         Mockito.when(toRecipeCommand.convert(Mockito.any())).thenReturn(recipeCommandSample1);
+        Mockito.when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(recipeSample1));
 
         //when
         var r = recipeService.findRecipeCommandById(1L);

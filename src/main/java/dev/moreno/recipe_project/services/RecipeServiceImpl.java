@@ -4,6 +4,7 @@ import dev.moreno.recipe_project.commands.RecipeCommand;
 import dev.moreno.recipe_project.converters.RecipeCommandToRecipe;
 import dev.moreno.recipe_project.converters.RecipeToRecipeCommand;
 import dev.moreno.recipe_project.domains.Recipe;
+import dev.moreno.recipe_project.exceptions.NotFoundException;
 import dev.moreno.recipe_project.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -41,7 +42,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long id) {
         var optional = recipeRepo.findById(id);
-        return optional.orElse(null);
+        if (optional.isEmpty())
+            throw new NotFoundException("Recipe Not Found");
+        return optional.get();
     }
 
     @Transactional
