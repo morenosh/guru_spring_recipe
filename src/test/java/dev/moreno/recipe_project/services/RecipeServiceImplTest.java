@@ -66,7 +66,8 @@ class RecipeServiceImplTest {
     void findByIdFound() {
         Mockito.when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(recipeSample1));
 
-        var r = recipeService.findById(1L);
+        var id = 1L;
+        var r = recipeService.findById(id);
         assertEquals(r, recipeSample1);
     }
 
@@ -74,7 +75,7 @@ class RecipeServiceImplTest {
     void findByIdNotFound() {
         Mockito.when(recipeRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         var exception = assertThrows(NotFoundException.class, () -> recipeService.findById(1L));
-        assertEquals("Recipe Not Found", exception.getMessage());
+        assertEquals("Recipe Not Found: For ID = " + 1, exception.getMessage());
     }
 
     @Test
