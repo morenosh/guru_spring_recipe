@@ -2,6 +2,7 @@ package dev.moreno.recipe_project.controllers;
 
 import dev.moreno.recipe_project.commands.RecipeCommand;
 import dev.moreno.recipe_project.domains.Recipe;
+import dev.moreno.recipe_project.exceptions.NotFoundException;
 import dev.moreno.recipe_project.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,16 @@ class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("recipe/show"));
+    }
+
+    @Test
+    void testRecipeNotFound() throws Exception {
+        var mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+
+        Mockito.when(recipeService.findById(Mockito.anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show/"))
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
