@@ -73,7 +73,7 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NumberFormatException.class)
     ModelAndView handleNumberFormatException(Exception exception) {
-        log.error("Handling not found exception");
+        log.error("Handling number format exception");
         log.error(exception.getMessage());
 
         var modelAndView = new ModelAndView("/400error.html");
