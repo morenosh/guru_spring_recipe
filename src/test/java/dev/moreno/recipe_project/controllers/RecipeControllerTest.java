@@ -83,7 +83,9 @@ class RecipeControllerTest {
         Mockito.when(recipeService.saveRecipeCommand(Mockito.any())).thenReturn(sampleRecipeCommand);
 
         //then
-        mockMvc.perform(MockMvcRequestBuilders.post("/recipe", new RecipeCommand()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe", new RecipeCommand())
+                .param("title", "a title")
+                .param("directions", "a direction"))
             .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
             .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/5/show/"));
     }
