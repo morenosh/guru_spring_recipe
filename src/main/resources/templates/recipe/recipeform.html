@@ -47,7 +47,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-3 card-group has-validation">
-                    <label>Recipe Description:</label>
+                    <label>Recipe Title:</label>
                     <input type="text" class="form-control" th:field="*{title}"
                            th:class="${#fields.hasErrors('title')}? 'form-control is-invalid' : 'form-control'"/>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('title')}">
